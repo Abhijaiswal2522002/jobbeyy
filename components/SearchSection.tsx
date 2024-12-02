@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -13,41 +13,27 @@ import {
 } from "@/components/ui/select";
 
 export default function SearchSection() {
-  const [locations, setLocations] = useState([]);
+  // Hardcoded locations array
+  const locations = [
+    { id: "1", name: "New York" },
+    { id: "2", name: "Los Angeles" },
+    { id: "3", name: "Chicago" },
+    { id: "4", name: "Houston" },
+    { id: "5", name: "Phoenix" },
+  ];
+
   const [selectedLocation, setSelectedLocation] = useState("");
-
-  const fetchLocations = async (query: string) => {
-    try {
-      const response = await fetch(
-        `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${query}&types=(cities)&components=country:in&key=YOUR_API_KEY`
-      );
-      const data = await response.json();
-      const locationOptions = data.predictions.map((place: any) => ({
-        id: place.place_id,
-        name: place.description,
-      }));
-      setLocations(locationOptions);
-    } catch (error) {
-      console.error("Error fetching locations:", error);
-    }
-  };
-
-  const handleLocationInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const query = e.target.value;
-    if (query.length > 2) {
-      fetchLocations(query);
-    }
-  };
 
   return (
     <div className="bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 p-8 rounded-lg shadow-lg">
-      <h2 className="text-white text-2xl font-bold mb-4 text-center">Find Your Dream Job</h2>
+      <h2 className="text-white text-2xl font-bold mb-4 text-center">
+        Find Your Dream Job
+      </h2>
       <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
         <div className="md:col-span-2">
           <Input placeholder="Job type or keyword" className="bg-white" />
         </div>
         <div>
-         
           <Select onValueChange={(value) => setSelectedLocation(value)}>
             <SelectTrigger className="bg-white">
               <SelectValue placeholder="Select location" />
@@ -91,6 +77,11 @@ export default function SearchSection() {
       <Button className="w-full mt-6 bg-white text-blue-700 font-semibold hover:bg-blue-100">
         <Search className="mr-2 h-4 w-4" /> Search Jobs
       </Button>
+
+      {/* Optional: Display selected location */}
+      {selectedLocation && (
+        <p className="mt-4 text-white">Selected Location: {selectedLocation}</p>
+      )}
     </div>
   );
 }
